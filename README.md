@@ -149,6 +149,4 @@ This project demonstrates:
 - REST API integration
 - Cloud deployment
 
----
 
-## License
