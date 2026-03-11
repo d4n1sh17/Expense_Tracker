@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg-start: #f7f9f2;
+            --bg-end: #ebf3fb;
+            --ink: #1f2a30;
+            --muted: #5f6f79;
+            --card: rgba(255, 255, 255, 0.82);
+            --line: #d8e1e8;
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --accent: #dc6803;
+            --danger: #c81e1e;
+            --success-bg: #def7ec;
+            --success-text: #046c4e;
+            --error-bg: #fde8e8;
+            --error-text: #9b1c1c;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Space Grotesk", sans-serif;
+            color: var(--ink);
+            background: radial-gradient(circle at 20% 10%, #d8f0ea 0, transparent 40%),
+                        radial-gradient(circle at 80% 90%, #fdeac8 0, transparent 38%),
+                        linear-gradient(145deg, var(--bg-start), var(--bg-end));
+        }
+
+        .container {
+            max-width: 1080px;
+            margin: 34px auto;
+            padding: 0 18px 24px;
+        }
+
+        .hero {
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 14px 30px rgba(31, 42, 48, 0.09);
+            backdrop-filter: blur(8px);
+            animation: fade-slide 0.5s ease;
+        }
+
+        .hero-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+            letter-spacing: 0.2px;
+        }
+
+        .tagline {
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn:hover { transform: translateY(-1px); }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-edit { background: var(--accent); color: #fff; }
+        .btn-delete { background: var(--danger); color: #fff; }
+
+        .stats {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 14px;
+            padding: 14px 16px;
+        }
+
+        .stat-label {
+            margin: 0;
+            font-size: 0.8rem;
+            color: var(--muted);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            margin: 4px 0 0;
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .alerts {
+            margin-top: 14px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .alert {
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 0.9rem;
+        }
+
+        .alert-success {
+            background: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid #9fe3c2;
+        }
+
+        .alert-error {
+            background: var(--error-bg);
+            color: var(--error-text);
+            border: 1px solid #f8b4b4;
+        }
+
+        .table-wrap {
+            margin-top: 18px;
+            background: var(--card);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 14px 30px rgba(31, 42, 48, 0.08);
+            backdrop-filter: blur(8px);
+            animation: fade-slide 0.6s ease;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 13px 14px;
+            background: rgba(247, 250, 253, 0.88);
+            font-size: 0.84rem;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            color: #34414a;
+        }
+
+        tbody td {
+            padding: 12px 14px;
+            border-top: 1px solid var(--line);
+            font-size: 0.92rem;
+        }
+
+        .amount {
+            font-weight: 700;
+            color: #0d5d57;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .empty {
+            padding: 20px;
+            color: var(--muted);
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        @keyframes fade-slide {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 860px) {
+            .stats { grid-template-columns: 1fr; }
+            .table-wrap { overflow-x: auto; }
+            table { min-width: 720px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="hero">
+            <div class="hero-top">
+                <div>
+                    <h1>Personal Expense Tracker</h1>
+                </div>
+                <a href="{{ url_for('add_expense') }}" class="btn btn-primary">+ Add Expense</a>
+            </div>
+
+            <div class="stats">
+                <article class="stat-card">
+                    <p class="stat-label">Total Spent</p>
+                    <p class="stat-value">INR {{ "%.2f"|format(total_spent) }}</p>
+                </article>
+                <article class="stat-card">
+                    <p class="stat-label">Total Entries</p>
+                    <p class="stat-value">{{ total_records }}</p>
+                </article>
+                <article class="stat-card">
+                    <p class="stat-label">Latest Date</p>
+                    <p class="stat-value">{{ latest_date }}</p>
+                </article>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="alerts">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </section>
+
+        <section class="table-wrap">
+            {% if expenses %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for expense in expenses %}
+                            <tr>
+                                <td>{{ expense.id }}</td>
+                                <td>{{ expense.title }}</td>
+                                <td>{{ expense.category }}</td>
+                                <td class="amount">INR {{ "%.2f"|format(expense.amount) }}</td>
+                                <td>{{ expense.expense_date }}</td>
+                                <td>
+                                    <div class="actions">
+                                        <a href="{{ url_for('edit_expense', id=expense.id) }}" class="btn btn-edit">Edit</a>
+                                        <a href="{{ url_for('delete_expense', id=expense.id) }}" class="btn btn-delete" onclick="return confirm('Delete this expense?');">Delete</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty">No expense records yet. Add your first expense to begin.</div>
+            {% endif %}
+        </section>
+    </div>
+</body>
+</html>
